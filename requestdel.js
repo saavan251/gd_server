@@ -1,36 +1,34 @@
-var fs = require("fs"),
-    http = require("http"),
-    url = require("url"),
-    path = require("path");
 var request = require('request');
-  var ffmpeg = require('fluent-ffmpeg');
-var curr=__dirname;
-  var testFolder = curr+'\\remove_from_share';
-var proc = new ffmpeg({ source: curr+'\\a.mp4' })
-  .withSize('150x100')
-  .takeScreenshots({
-      count: 2,
-      timemarks: [ '0.5', '1' ]
-    }, testFolder, function(err, filenames) {
-      if(err)
-        console.log(err);
-      console.log(filenames);
-      console.log('screenshots were saved');
-  });
-/*var fs = require("fs"),
-    http = require("http"),
-    url = require("url"),
-    path = require("path");
-var schedule = require('node-schedule');
-var request = require('request');
-var cron = require('node-cron');
-var rn = random(0,29);
-  var rn2 =rn+30;
-  console.log(rn);
-var j = schedule.scheduleJob({ minute: rn}, function(){
-  console.log('Time for tea!');
-});
+var fs = require('fs');
+var buf = fs.readFileSync('userdata.txt', "utf8");
+if (! buf){
+  console.log('ERROR: no user data found plz enter userdata');
+}
+else{
+  var data = buf.split(',');
+  var nick = data[0];
+  var password = data[1];
+  var url="http://192.168.118.164:3000/update/delvid";
+  var formdata = {
+      nick: nick,
+      password: password
+    };
+    multirequest(formdata);
+}
 
-function random (low, high) {
-    return Math.floor(Math.random() * (high - low + 1) + low);
-}*/
+function multirequest(formdata){
+  request.post(url, {form: formdata}, function(err, httpres, body){
+      if(!body){
+        console.log("ERROR: centeral server not running");
+        multirequest(formdata);
+      }
+      else if(body != "successfully removed videos from your share"){
+        console.log(typeof body);
+        console.log(body);
+        multirequest(formdata);
+      }
+      else{
+        console.log(body);
+      }
+  });
+}

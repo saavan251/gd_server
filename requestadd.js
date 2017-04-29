@@ -13,12 +13,22 @@ else{
 	    nick: nick,
 	    password: password
 	  };
-	  request.post(url, {form: formdata}, function(err, httpres, body){
-	    if(!body){
-	      console.log("ERROR: centeral server not running");
-	    }
-	    else{
-	      console.log(body);
-	    }
-	});
+	  multirequest(formdata);
+}
+
+function multirequest(formdata){
+  request.post(url, {form: formdata}, function(err, httpres, body){
+      if(!body){
+        console.log("ERROR: centeral server not running");
+        multirequest(formdata);
+      }
+      else if(body != "successfully updated"){
+      	console.log(typeof body);
+        console.log(body);
+        multirequest(formdata);
+      }
+      else{
+      	console.log(body);
+      }
+  });
 }

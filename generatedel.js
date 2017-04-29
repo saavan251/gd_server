@@ -9,26 +9,48 @@ if (! buf){
 	console.log('ERROR: no user data found plz enter userdata');
 }
 else{
+	fs.writeFileSync('dellist.html', '2"""');
 	var curr=__dirname;
-	var testFolder = curr+'\\remove_from_share';
+	var tpath = path.resolve(curr+'/remove_from_share');
 	//console.log(testFolder);
-	fs.readdir(testFolder, (err, files) => {
+	recurse(tpath,'/my_shared_videos');
+}
+
+function recurse(tpath, url){
+	fs.readdir(tpath, (err, files) => {
 		if(files.length == 0)
-			console.log('NO FILES TO DELETE');
+			console.log('NO FILES TO DELETE in '+tpath);
 		else{
-			fs.writeFileSync('dellist.html', '2"""');
+			
 		  	files.forEach(file => {
-		    var path= 'remove_from_share\\'+file;
-		    //console.log(path);
-		    md5File(path, (err, hash) => {
-		    if (err) throw err
-		   //console.log(file);
-		    /*console.log('The MD5 sum of'+file+'is: '+hash);
-		    console.log('');*/
-		    var data = file + ",,,," + hash + "$$$";
-		    fs.appendFileSync('dellist.html', data);
-	 	});
+		  		//console.log(tpath+'\\'+file);
+		  		fs.stat(path.resolve(tpath+'/'+file), function(err, stats) {
+		  			if(err)
+		  				console.log(err);
+		  			else{
+		  				if(stats.isDirectory()){
+		  					recurse(path.resolve(tpath+'/'+file),url+'/'+file);
+		  				}
+		  				else{
+						    console.log(url+'/'+file);
+						    md5File(path.resolve(tpath+'/'+file), (err, hash) => {
+						    	if (err) 
+						    	{
+						    		console.log(err);
+						    		console.log("error in md5");
+						    	}
+							   //console.log(file);
+							    var data = hash + "$$$";
+							    fs.appendFileSync('dellist.html', data);
+							    console.log(data);
+					 		});
+		  				}
+
+
+		  			}
+		  		});
 	  });
 		  }
 	});
+
 }

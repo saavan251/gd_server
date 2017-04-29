@@ -4,7 +4,6 @@ var fs = require("fs"),
     path = require("path");
 var schedule = require('node-schedule');
 var request = require('request');
-var cron = require('node-cron');
 
 var buf = fs.readFileSync('userdata.txt', "utf8");
 if (! buf){
@@ -21,7 +20,7 @@ else{
   var k = schedule.scheduleJob({ minute: rn2}, makeattendancce);
 
   http.createServer(function (req, res) {
-  	console.log(req.url);
+  	console.log(req.status );
   	var u=req.url.substring(1,req.url.length);
   	console.log(u);
     	console.log('4444455555555555555555555555555');
@@ -73,7 +72,7 @@ else{
       });
     }
     else{
-    	console.log(req.url);
+    	console.log(req.url); 
     	console.log('44444');
       var file = decodeURI(path.resolve(__dirname,u));
       console.log(file);
