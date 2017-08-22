@@ -20,10 +20,10 @@ else{
   var k = schedule.scheduleJob({ minute: rn2}, makeattendancce);
 
   http.createServer(function (req, res) {
-  	//console.log(req);
+  	console.log(req.status );
   	var u=req.url.substring(1,req.url.length);
-  	//console.log(u);
-    console.log('***********************************************************************************');
+  	console.log(u);
+    	console.log('4444455555555555555555555555555');
     if (req.url == "/list.html") {
       fs.readFile('list.html', function (err, html) {
         if (err) {
@@ -56,9 +56,9 @@ else{
     }
     else if(req.url.substring(0,8) == "/sec123d"){
       var u=req.url.substring(9,req.url.length);
-      //console.log('4444');
-      //console.log(u);
-      //console.log(__dirname);
+      console.log('4444');
+      console.log(u);
+      console.log(__dirname);
       console.log(path.resolve(__dirname,u));
       var file = decodeURI(path.resolve(__dirname,u));
       console.log(file);
@@ -72,10 +72,10 @@ else{
       });
     }
     else{
-    	console.log('URL: '+req.url); 
-    	//console.log('44444');
+    	console.log(req.url); 
+    	console.log('44444');
       var file = decodeURI(path.resolve(__dirname,u));
-      console.log('PATH: '+file);
+      console.log(file);
       fs.stat(file, function(err, stats) {
         if (err) {
           if (err.code === 'ENOENT') {
@@ -102,11 +102,11 @@ else{
         var total = stats.size;
         var end = positions[1] ? parseInt(positions[1], 10) : total - 1;
         var chunksize = (end - start) + 1;
-        chunksize= Math.min(1024*512,chunksize);
-        console.log('CHUNKSIZE: '+chunksize);
-        //console.log('00000000000');
-        end = start+chunksize-1;
-        console.log("RANGE: "+start+" "+end);
+        /*chunksize= parseInt(chunksize/800);
+        console.log(chunksize);
+        console.log('00000000000');
+        end = start+chunksize-1;--*/
+        console.log(start+" "+end+"+++8888");
         res.writeHead(206, {
           "Content-Range": "bytes " + start + "-" + end + "/" + total,
           "Accept-Ranges": "bytes",
@@ -128,7 +128,7 @@ multirequest();
 }
 
 function makeattendancce() {
-  var url="http://localhost:3000/attendance";
+  var url="http://192.168.118.164:3000/attendance";
     var formdata = {
       nick: nick,
       password: password
@@ -145,14 +145,13 @@ function makeattendancce() {
 }
 
 function multirequest(){
-  var url="http://localhost:3000/attendance";
+  var url="http://192.168.118.164:3000/attendance";
   var formdata = {
       nick: nick,
       password: password
     };
   request.post(url, {form: formdata}, function(err, httpres, body){
       if(!body){
-        console.log(err);
         console.log("ERROR: centeral server not running");
         multirequest(formdata);
       }

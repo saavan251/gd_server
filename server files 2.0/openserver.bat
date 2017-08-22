@@ -1,5 +1,4 @@
-node generateadd.js
-node requestadd.js
+forever start server.js
 @echo off
 echo Press enter to exit....
 set /p input=

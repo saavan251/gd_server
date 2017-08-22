@@ -9,17 +9,17 @@ if (! buf){
 	console.log('ERROR: no user data found plz enter userdata');
 }
 else{
-	fs.writeFileSync('addlist.html', '2"""');
+	fs.writeFileSync('dellist.html', '2"""');
 	var curr=__dirname;
-	var tpath = path.resolve(curr+'/share_these_videos');
+	var tpath = path.resolve(curr+'/remove_from_share');
 	//console.log(testFolder);
-	recurse(tpath,'/my_shared_videos',0);
+	recurse(tpath,'/my_shared_videos');
 }
 
-function recurse(tpath, url, isexplicit){
+function recurse(tpath, url){
 	fs.readdir(tpath, (err, files) => {
 		if(files.length == 0)
-			console.log('NO FILES TO SHARE in '+tpath);
+			console.log('NO FILES TO DELETE in '+tpath);
 		else{
 			
 		  	files.forEach(file => {
@@ -29,14 +29,7 @@ function recurse(tpath, url, isexplicit){
 		  				console.log(err);
 		  			else{
 		  				if(stats.isDirectory()){
-		  					if(file == "explicit"){
-		  						console.log('explicit folder found-------');
-		  						recurse(path.resolve(tpath+'/'+file),url+'/'+file, 1);
-		  					}
-		  					else{
-		  						//console.log('not found ********');
-		  						recurse(path.resolve(tpath+'/'+file),url+'/'+file, 0);
-		  					}
+		  					recurse(path.resolve(tpath+'/'+file),url+'/'+file);
 		  				}
 		  				else{
 						    console.log(url+'/'+file);
@@ -46,13 +39,9 @@ function recurse(tpath, url, isexplicit){
 						    		console.log(err);
 						    		console.log("error in md5");
 						    	}
-							    //console.log(file);
-							    var data ="";
-							    if(isexplicit == 0)
-							    	data = url+'/'+file + ",,,," + hash + ",,,,0$$$";
-							    else
-							    	data = url+'/'+file + ",,,," + hash + ",,,,1$$$";
-							    fs.appendFileSync('addlist.html', data);
+							   //console.log(file);
+							    var data = hash + "$$$";
+							    fs.appendFileSync('dellist.html', data);
 							    console.log(data);
 					 		});
 		  				}

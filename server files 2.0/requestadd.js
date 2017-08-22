@@ -5,19 +5,24 @@ var fs = require("fs"),
     path = require("path");
 var buf = fs.readFileSync('userdata.txt', "utf8");
 var buf2 = fs.readFileSync('serverdata.txt', "utf8");
+
 if (! buf){
-	console.log('ERROR: no user data found plz enter userdata');
+  console.log('ERROR: No user data found plz enter your nick and password in userdata.txt');
+}
+else if(! buf2){
+  console.log('ERROR: No server data found plz enter server ip:port in serverdata.txt');
 }
 else{
-	var data = buf.split(',');
-	var nick = data[0];
-	var password = data[1];
-	var url="http://192.168.118.164:3000/update/addvid";
-	var formdata = {
-	    nick: nick,
-	    password: password
-	  };
-	  multirequest(formdata);
+  var data = buf.split(',');
+  var nick = data[0];
+  var password = data[1];
+  var url="http://"+buf2+"/update/addvid";
+  //console.log(url);
+  var formdata = {
+      nick: nick,
+      password: password
+    };
+    multirequest(formdata);
 }
 
 function multirequest(formdata){
@@ -27,12 +32,12 @@ function multirequest(formdata){
         multirequest(formdata);
       }
       else if(body != "successfully updated"){
-      	//console.log(typeof body);
+        //console.log(typeof body);
         console.log(body);
         multirequest(formdata);
       }
       else{
-      	console.log(body);
+        console.log(body);
         transfer();
       }
   });
